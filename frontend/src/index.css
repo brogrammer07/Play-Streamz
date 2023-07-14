@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  h1 {
+    @apply font-eb-garamond text-3xl leading-1 font-semi-bold;
+  }
+  h2 {
+    @apply font-eb-garamond text-2xl leading-1 font-semi-bold;
+  }
+  h3 {
+    @apply font-eb-garamond text-xl leading-1 font-semi-bold;
+  }
+  h4 {
+    @apply font-eb-garamond text-lg leading-1 font-semi-bold;
+  }
+  h5 {
+    @apply font-eb-garamond text-sm leading-1 font-semi-bold;
+  }
+}
+
+@layer components {
+  .p1-r,
+  .l1-r {
+    @apply font-open-sans  text-base leading-2 font-regular;
+  }
+  .p1-sb,
+  .l1-sb {
+    @apply font-open-sans  text-base leading-2 font-semi-bold;
+  }
+  .p2-r,
+  .l2-r {
+    @apply font-open-sans  text-sm leading-2 font-regular;
+  }
+  .p2-sb,
+  .l2-sb {
+    @apply font-open-sans  text-sm leading-2 font-semi-bold;
+  }
+  .p3-r,
+  .l3-r {
+    @apply font-open-sans  text-xs leading-2 font-regular;
+  }
+  .p3-sb,
+  .l3-sb {
+    @apply font-open-sans  text-xs leading-2 font-semi-bold;
+  }
+}
