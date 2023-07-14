@@ -4,7 +4,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px !important;
+  /* --scrollbar-thumb: #888887 !important; */
+  background-color: #888887;
+}
 @layer base {
   h1 {
     @apply font-eb-garamond text-3xl leading-1 font-semi-bold;
@@ -47,5 +54,11 @@
   .p3-sb,
   .l3-sb {
     @apply font-open-sans  text-xs leading-2 font-semi-bold;
+  }
+  .overlayShadow {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+    border: 1px solid #1a202c;
+    filter: drop-shadow(7px 8px 8px rgba(0, 0, 0, 0.25));
+    border-radius: 30px;
   }
 }

@@ -11,6 +11,7 @@ export default {
         500: "#FECA81",
         400: "#FFD9A3",
         300: "#FFE8C7",
+        dark: "#CA7705",
       },
       neutral: {
         900: "#70716F",
@@ -41,12 +42,14 @@ export default {
         500: "#5E5E54",
         400: "#78786F",
       },
+      none: "transparent",
     },
     borderRadius: {
       sm: "12px",
       md: "6px",
       lg: "10px",
-      xl: "26px",
+      xl: "19px",
+      "2xl": "30px",
     },
     fontFamily: {
       "eb-garamond": ["EB Garamond", "serif"],
@@ -72,5 +75,5 @@ export default {
       bold: 700,
     },
   },
-  plugins: [],
+  // plugins: [require("tailwind-scrollbar")],
 };
