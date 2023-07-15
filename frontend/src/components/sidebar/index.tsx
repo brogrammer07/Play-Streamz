@@ -215,11 +215,10 @@ function Sidebar({ type = "primary" }: SidebarProps) {
   ) : (
     <>
       {type === "secondary" && (
-        <div
-          onClick={toggleDrawer(true)}
-          className="h-full text-neutral-400 px-[25px] py-[42px] cursor-pointer"
-        >
-          <MenuOutlinedIcon />
+        <div className="h-full text-neutral-400 px-[25px] py-[42px] ">
+          <div onClick={toggleDrawer(true)} className="cursor-pointer">
+            <MenuOutlinedIcon />
+          </div>
         </div>
       )}
 

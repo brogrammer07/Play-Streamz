@@ -17,10 +17,13 @@
     "@tanstack/react-query": "^4.29.19",
     "@tanstack/react-query-devtools": "^4.29.19",
     "axios": "^1.4.0",
+    "format-duration": "^3.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-player": "^2.12.0",
     "react-router-dom": "^6.14.0",
-    "react-stacked-center-carousel": "^1.0.12"
+    "react-stacked-center-carousel": "^1.0.12",
+    "screenfull": "^6.0.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",
