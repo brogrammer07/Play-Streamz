@@ -1,7 +1,7 @@
 type ButtonProps = {
   icon?: React.ReactNode;
   type: "outlined" | "solid" | "normal" | "rounded";
-  title: string;
+  title: string | number;
   accent?: "red" | "white";
 };
 

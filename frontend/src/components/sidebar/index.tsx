@@ -1,12 +1,14 @@
+import { Dispatch, SetStateAction, useState } from "react";
 import { NavLink } from "react-router-dom";
-
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SensorsOutlinedIcon from "@mui/icons-material/SensorsOutlined";
 import VideoLibraryOutlinedIcon from "@mui/icons-material/VideoLibraryOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import SubscriptionsOutlinedIcon from "@mui/icons-material/SubscriptionsOutlined";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
+import Drawer from "@mui/material/Drawer";
 import { Avatar } from "@mui/material";
 type OptionsProps = {
   title: string;
@@ -31,15 +33,39 @@ const Options: React.FC<OptionsProps> = ({ title, link, icon }) => {
   );
 };
 
-function Sidebar() {
+type SidebarProps = {
+  type?: "primary" | "secondary";
+};
+
+const SidebarContent = ({
+  type = "primary",
+  setOpenSidebar,
+}: {
+  type?: "primary" | "secondary";
+  setOpenSidebar: Dispatch<SetStateAction<boolean>>;
+}) => {
   return (
-    <div className="bg-gradient-to-r from-[#000000] to-black-900 h-full w-[20%] flex flex-col py-[30px] pl-[30px] space-y-[25px]">
-      <div className="w-full flex justify-center">
-        <img
-          src="/assets/Logo_with_name.png"
-          className="w-[114px] h-[93px]"
-          alt=""
-        />
+    <div
+      className={
+        "bg-gradient-to-r from-[#000000] to-black-900 h-full w-full flex flex-col py-[30px] pl-[30px] space-y-[25px]"
+      }
+    >
+      <div className="flex ">
+        {type === "secondary" && (
+          <div
+            onClick={() => setOpenSidebar(false)}
+            className="text-neutral-400 cursor-pointer"
+          >
+            <MenuOutlinedIcon />
+          </div>
+        )}
+        <div className="w-full flex justify-center">
+          <img
+            src="/assets/Logo_with_name.png"
+            className="w-[114px] h-[93px]"
+            alt=""
+          />
+        </div>
       </div>
       <div className="flex flex-col space-y-[6px] h-full overflow-y-auto pr-2">
         <div className="flex flex-col pb-[5px] border-b-black-700 border-b-[1px]">
@@ -165,6 +191,49 @@ function Sidebar() {
         </div>
       </div>
     </div>
+  );
+};
+
+function Sidebar({ type = "primary" }: SidebarProps) {
+  const [openSidebar, setOpenSidebar] = useState<boolean>(false);
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+
+      setOpenSidebar(open);
+    };
+  return type === "primary" ? (
+    <div className="h-full w-[320px]">
+      <SidebarContent setOpenSidebar={setOpenSidebar} />
+    </div>
+  ) : (
+    <>
+      {type === "secondary" && (
+        <div
+          onClick={toggleDrawer(true)}
+          className="h-full text-neutral-400 px-[25px] py-[42px] cursor-pointer"
+        >
+          <MenuOutlinedIcon />
+        </div>
+      )}
+
+      <Drawer
+        PaperProps={{
+          sx: { width: "260px" },
+        }}
+        anchor={"left"}
+        open={openSidebar}
+        onClose={toggleDrawer(false)}
+      >
+        <SidebarContent setOpenSidebar={setOpenSidebar} type={type} />
+      </Drawer>
+    </>
   );
 }
 

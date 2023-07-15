@@ -50,10 +50,12 @@ export default {
       lg: "10px",
       xl: "19px",
       "2xl": "30px",
+      full: "999px",
     },
     fontFamily: {
       "eb-garamond": ["EB Garamond", "serif"],
       "open-sans": ["Open Sans", "sans-serif"],
+      "Julius-Sans-One": ["Julius Sans One", "sans-serif"],
     },
     fontSize: {
       xs: "12px",

@@ -1,4 +1,6 @@
-type VideoProps = {
+import { useNavigate } from "react-router-dom";
+
+type VideoPreviewProps = {
   videoId: string;
   channelId: string;
   title: string;
@@ -10,15 +12,20 @@ type VideoProps = {
   };
 };
 
-const Video: React.FC<VideoProps> = ({
+const VideoPreview: React.FC<VideoPreviewProps> = ({
   title,
   thumbnail,
   views,
   postedAt,
   channel,
+  videoId,
 }) => {
+  const navigate = useNavigate();
   return (
-    <div className="w-full h-[267px] rounded-2xl relative cursor-pointer">
+    <div
+      onClick={() => navigate(`/video?v=${videoId}`)}
+      className="w-full h-[267px] rounded-2xl relative cursor-pointer"
+    >
       <div className="absolute w-full h-full top-0 overlayShadow hover:opacity-0 transition-opacity duration-500 flex flex-col justify-end pb-[26px] px-[34px]">
         <div className="flex flex-col text-neutral-400 space-y-[8px]">
           <h4>{title}</h4>
@@ -35,4 +42,4 @@ const Video: React.FC<VideoProps> = ({
   );
 };
 
-export default Video;
+export default VideoPreview;
