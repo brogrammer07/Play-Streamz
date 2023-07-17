@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Button from "../../components/button";
 import { Avatar } from "@mui/material";
-import Input from "../../components/input";
+import Input from "../../components/input/Input";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";

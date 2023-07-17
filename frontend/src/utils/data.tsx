@@ -197,3 +197,90 @@ export const video = {
     followers: 1223,
   },
 };
+
+export const channels = [
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_2.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_3.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_2.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_3.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_2.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_3.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_2.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_3.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_2.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_3.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_2.png",
+    following: true,
+    followers: 1223,
+  },
+  {
+    name: "Lorem",
+    profile: "/assets/sample_profile_3.png",
+    following: true,
+    followers: 1223,
+  },
+];
+
+export const channel = {
+  name: "Lorem",
+  profile: "/assets/sample_profile_2.png",
+  following: true,
+  followers: 1223,
+  videos: 10,
+  followings: 321,
+  views: 231154,
+  likes: 54322,
+  joiningDate: "10th July, 2023",
+};

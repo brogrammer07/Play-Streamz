@@ -20,7 +20,8 @@ function Video() {
     <LayoutPrimary type="secondary">
       <div className="flex space-x-[35px] overflow-y-auto pr-3">
         <div className="flex-[0.7] flex flex-col space-y-[20px]">
-          <VideoPlayer thumbnail={currVideo.thumbnail} />
+          <VideoPlayer />
+
           <h3 className="text-neutral-400">{currVideo.title}</h3>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-[35px]">
@@ -38,6 +39,15 @@ function Video() {
               </div>
               <Button
                 title={currVideo.channel.following ? "Unfollow" : "Follow"}
+                onClick={() =>
+                  setCurrVideo({
+                    ...currVideo,
+                    channel: {
+                      ...currVideo.channel,
+                      following: !currVideo.channel.following,
+                    },
+                  })
+                }
                 type="solid"
                 icon={
                   !currVideo.channel.following ? (
@@ -50,6 +60,12 @@ function Video() {
             </div>
             <div className="flex items-center">
               <Button
+                onClick={() =>
+                  setCurrVideo({
+                    ...currVideo,
+                    liked: !currVideo.liked,
+                  })
+                }
                 icon={
                   currVideo.liked ? <ThumbUpIcon /> : <ThumbUpOutlinedIcon />
                 }
@@ -57,6 +73,12 @@ function Video() {
                 type="normal"
               />
               <Button
+                onClick={() =>
+                  setCurrVideo({
+                    ...currVideo,
+                    disliked: !currVideo.disliked,
+                  })
+                }
                 icon={
                   currVideo.disliked ? (
                     <ThumbDownIcon />
@@ -80,7 +102,7 @@ function Video() {
         </div>
         <div className="flex-[0.3] flex flex-col space-y-[25px]">
           {videos.map((video, idx) => (
-            <VideoPreview key={idx} {...video} />
+            <VideoPreview page="home" key={idx} {...video} />
           ))}
         </div>
       </div>

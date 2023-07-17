@@ -1,13 +1,14 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState, ChangeEvent } from "react";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 type InputProps = {
-  type: "text" | "email" | "password";
+  type: "text" | "email" | "password" | "file";
   placeholder: string;
   title: string;
-  value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  value: any;
   boxType?: "primary" | "secondary";
+  handleChange: (id: string, value: any) => void;
+  id: string;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -15,10 +16,15 @@ const Input: React.FC<InputProps> = ({
   placeholder,
   title,
   value,
-  setValue,
   boxType = "primary",
+  handleChange,
+  id,
 }) => {
   const [visibility, setVisibility] = useState<boolean>(false);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleChange(id, e.target.value);
+  };
+
   return (
     <>
       {boxType === "primary" ? (
@@ -26,13 +32,14 @@ const Input: React.FC<InputProps> = ({
           <legend className="p3-sb text-neutral-700 ">{title}</legend>
           <div className="flex gap-3">
             <input
+              id={id}
               className="bg-none border-none outline-none text-neutral-300 placeholder:text-neutral-900 w-full l1-r placeholder:l2-r "
               type={
                 type === "password" ? (visibility ? "text" : "password") : type
               }
               placeholder={placeholder}
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={handleInputChange}
             />
             {type === "password" &&
               (!visibility ? (
@@ -55,11 +62,12 @@ const Input: React.FC<InputProps> = ({
       ) : (
         <div className="w-full">
           <input
+            id={id}
             className="bg-none pb-[4px] border-b-[1px] border-b-black-600 outline-none text-neutral-300 placeholder:text-neutral-900 w-full l1-r placeholder:l2-r focus:border-b-primary-900"
             type={type}
             placeholder={placeholder}
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={handleInputChange}
           />
         </div>
       )}

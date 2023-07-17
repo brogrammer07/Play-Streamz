@@ -9,7 +9,7 @@ function Home() {
         <Carousel images={images} />
         <div className="grid grid-cols-3 gap-[17px]">
           {videos.map((video, idx) => (
-            <VideoPreview key={idx} {...video} />
+            <VideoPreview page="home" key={idx} {...video} />
           ))}
         </div>
       </div>

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Backdrop from "@mui/material/Backdrop";
-import Input from "../../input";
+import Input from "../../input/Input";
 import Button from "../../button";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 type SignInModalProps = {
@@ -18,8 +18,15 @@ type SignUpProps = {
 };
 
 const Login: React.FC<LoginProps> = ({ setLogin }) => {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [loginForm, setLoginForm] = useState<{
+    email: string;
+    password: string;
+  }>({ email: "", password: "" });
+
+  const handleChange = (id: string, value: string) => {
+    setLoginForm({ ...loginForm, [id]: value });
+  };
+
   return (
     <div className="flex flex-col justify-between items-center h-full">
       <div className="flex flex-col space-y-[10px] w-full">
@@ -27,18 +34,20 @@ const Login: React.FC<LoginProps> = ({ setLogin }) => {
           <h3 className="text-neutral-300">Log in to your account</h3>
           <div className="flex flex-col w-full space-y-[18px] ">
             <Input
-              setValue={setEmail}
               title={"Email"}
+              handleChange={handleChange}
+              id="email"
               placeholder="Enter email"
               type="email"
-              value={email}
+              value={loginForm.email}
             />
             <Input
-              setValue={setPassword}
               title={"Password"}
+              handleChange={handleChange}
+              id="password"
               placeholder="Enter password"
               type="password"
-              value={password}
+              value={loginForm.password}
             />
             <Button title="Log in" type="solid" />
           </div>
@@ -66,10 +75,17 @@ const Login: React.FC<LoginProps> = ({ setLogin }) => {
 };
 
 const SignUp: React.FC<SignUpProps> = ({ setLogin }) => {
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [signUpForm, setSignUpForm] = useState<{
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }>({ email: "", password: "", name: "", confirmPassword: "" });
+  const handleChange = (id: string, value: string) => {
+    setSignUpForm({ ...signUpForm, [id]: value });
+  };
+  console.log(signUpForm);
+
   return (
     <div className="flex flex-col justify-between items-center h-full">
       <div className="flex flex-col space-y-[10px] w-full">
@@ -77,32 +93,36 @@ const SignUp: React.FC<SignUpProps> = ({ setLogin }) => {
           <h3 className="text-neutral-300">Create an account</h3>
           <div className="flex flex-col w-full space-y-[18px] ">
             <Input
-              setValue={setName}
               title={"Name"}
+              id="name"
               placeholder="Enter name"
               type="text"
-              value={name}
+              value={signUpForm.name}
+              handleChange={handleChange}
             />
             <Input
-              setValue={setEmail}
               title={"Email"}
+              id="email"
               placeholder="Enter email"
               type="email"
-              value={email}
+              value={signUpForm.email}
+              handleChange={handleChange}
             />
             <Input
-              setValue={setPassword}
               title={"Password"}
+              id="password"
               placeholder="Enter password"
               type="password"
-              value={password}
+              value={signUpForm.password}
+              handleChange={handleChange}
             />
             <Input
-              setValue={setConfirmPassword}
               title={"Confirm Password"}
+              id="confirmPassword"
               placeholder="Enter confirm password"
               type="password"
-              value={confirmPassword}
+              value={signUpForm.confirmPassword}
+              handleChange={handleChange}
             />
             <Button title="Sign in" type="solid" />
           </div>
