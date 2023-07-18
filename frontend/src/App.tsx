@@ -6,6 +6,8 @@ import Saved from "./pages/saved";
 import Liked from "./pages/liked";
 import Following from "./pages/following";
 import Profile from "./pages/profile";
+import Live from "./pages/Live";
+import Test from "./utils/Test";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route path="/liked" element={<Liked />} />
         <Route path="/following" element={<Following />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/live" element={<Live />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </div>
   );
