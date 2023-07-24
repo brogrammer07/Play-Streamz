@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import { Avatar } from "@mui/material";
 import Button from "../button";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import SignInModal from "../modals/SignInModal";
 import { useNavigate } from "react-router-dom";
+import { useUserAuth } from "../../context/userAuthContext";
 type HeaderProps = {
   searchVal?: string | null;
   type?: "primary" | "secondary";
 };
 
 function Header({ searchVal, type = "primary" }: HeaderProps) {
+  const { currentUser, logout } = useUserAuth();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const navigate = useNavigate();
@@ -54,9 +57,22 @@ function Header({ searchVal, type = "primary" }: HeaderProps) {
             <SearchOutlinedIcon className="" />
           </div>
         </div>
-        <div onClick={() => setOpenModal(true)} className="">
-          <Button title="Sign in" type="rounded" icon={<LoginOutlinedIcon />} />
-        </div>
+        {currentUser ? (
+          <div onClick={() => logout()}>
+            <Avatar
+              src={currentUser.photoURL || ""}
+              sx={{ width: "54px", height: "54px" }}
+            />
+          </div>
+        ) : (
+          <div onClick={() => setOpenModal(true)} className="">
+            <Button
+              title="Sign in"
+              type="rounded"
+              icon={<LoginOutlinedIcon />}
+            />
+          </div>
+        )}
       </div>
       <SignInModal openModal={openModal} setOpenModal={setOpenModal} />
     </>

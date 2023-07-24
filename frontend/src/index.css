@@ -13,6 +13,13 @@
   /* --scrollbar-thumb: #888887 !important; */
   background-color: #888887;
 }
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+input[data-autocompleted] {
+  background-color: transparent !important;
+}
 @layer base {
   h1 {
     @apply font-eb-garamond text-3xl leading-1 font-semi-bold;

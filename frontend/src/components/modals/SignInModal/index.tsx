@@ -5,19 +5,31 @@ import Backdrop from "@mui/material/Backdrop";
 import Input from "../../input/Input";
 import Button from "../../button";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { useUserAuth } from "../../../context/userAuthContext";
+
+import ErrorText from "../../input/ErrorText";
 type SignInModalProps = {
   openModal: boolean;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 };
 type LoginProps = {
   setLogin: Dispatch<SetStateAction<boolean>>;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
 };
 
 type SignUpProps = {
   setLogin: Dispatch<SetStateAction<boolean>>;
+  setOpenModal: Dispatch<SetStateAction<boolean>>;
 };
 
-const Login: React.FC<LoginProps> = ({ setLogin }) => {
+const Login: React.FC<LoginProps> = ({ setLogin, setOpenModal }) => {
+  const { loginUser } = useUserAuth();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [formError, setFormError] = useState<{
+    email: boolean;
+    password: boolean;
+    default: boolean;
+  }>({ email: false, password: false, default: false });
   const [loginForm, setLoginForm] = useState<{
     email: string;
     password: string;
@@ -27,30 +39,73 @@ const Login: React.FC<LoginProps> = ({ setLogin }) => {
     setLoginForm({ ...loginForm, [id]: value });
   };
 
+  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setFormError({ email: false, password: false, default: false });
+    loginUser(loginForm.email, loginForm.password)
+      .then(() => setOpenModal(false))
+      .catch((error) => {
+        let errorCode = error.code;
+        console.log(errorCode);
+
+        if (
+          errorCode.split("/")[1] === "wrong-password" ||
+          errorCode.split("/")[1] === "user-not-found" ||
+          errorCode.split("/")[1] === "too-many-requests"
+        ) {
+          if (errorCode.split("/")[1] === "user-not-found")
+            setFormError({ ...formError, email: true });
+          else if (errorCode.split("/")[1] === "wrong-password")
+            setFormError({ ...formError, password: true });
+          else if (errorCode.split("/")[1] === "too-many-requests")
+            setFormError({ ...formError, default: true });
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+  console.log(formError);
+
   return (
     <div className="flex flex-col justify-between items-center h-full">
       <div className="flex flex-col space-y-[10px] w-full">
         <div className="flex flex-col items-center space-y-[47px] w-full">
           <h3 className="text-neutral-300">Log in to your account</h3>
-          <div className="flex flex-col w-full space-y-[18px] ">
-            <Input
-              title={"Email"}
-              handleChange={handleChange}
-              id="email"
-              placeholder="Enter email"
-              type="email"
-              value={loginForm.email}
-            />
-            <Input
-              title={"Password"}
-              handleChange={handleChange}
-              id="password"
-              placeholder="Enter password"
-              type="password"
-              value={loginForm.password}
-            />
-            <Button title="Log in" type="solid" />
-          </div>
+          <form
+            onSubmit={handleLogin}
+            className="flex flex-col w-full space-y-[18px] "
+          >
+            <div className="flex flex-col space-y-2">
+              <Input
+                title={"Email"}
+                handleChange={handleChange}
+                id="email"
+                placeholder="Enter email"
+                type="email"
+                value={loginForm.email}
+                error={formError.email}
+              />
+              {formError.email && <ErrorText text="User doesn't exist" />}
+            </div>
+            <div className="flex flex-col space-y-2">
+              <Input
+                title={"Password"}
+                handleChange={handleChange}
+                id="password"
+                placeholder="Enter password"
+                type="password"
+                value={loginForm.password}
+                error={formError.password}
+              />
+              {formError.password && <ErrorText text="Invalid password" />}
+              {formError.default && (
+                <ErrorText text="Too many attempts made! Please try again later" />
+              )}
+            </div>
+            <Button loading={loading} title="Log in" type="solid" />
+          </form>
         </div>
         <p className="l1-r text-neutral-800 text-center">Or</p>
         <Button
@@ -74,7 +129,8 @@ const Login: React.FC<LoginProps> = ({ setLogin }) => {
   );
 };
 
-const SignUp: React.FC<SignUpProps> = ({ setLogin }) => {
+const SignUp: React.FC<SignUpProps> = ({ setLogin, setOpenModal }) => {
+  const { signUpUser, currentUser } = useUserAuth();
   const [signUpForm, setSignUpForm] = useState<{
     name: string;
     email: string;
@@ -84,14 +140,25 @@ const SignUp: React.FC<SignUpProps> = ({ setLogin }) => {
   const handleChange = (id: string, value: string) => {
     setSignUpForm({ ...signUpForm, [id]: value });
   };
-  console.log(signUpForm);
+
+  const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (signUpForm.password === signUpForm.confirmPassword) {
+      signUpUser(signUpForm.email, signUpForm.password, signUpForm.name).then(
+        () => setOpenModal(false)
+      );
+    }
+  };
 
   return (
     <div className="flex flex-col justify-between items-center h-full">
       <div className="flex flex-col space-y-[10px] w-full">
         <div className="flex flex-col items-center space-y-[47px] w-full">
           <h3 className="text-neutral-300">Create an account</h3>
-          <div className="flex flex-col w-full space-y-[18px] ">
+          <form
+            onSubmit={handleSignUp}
+            className="flex flex-col w-full space-y-[18px] "
+          >
             <Input
               title={"Name"}
               id="name"
@@ -124,8 +191,8 @@ const SignUp: React.FC<SignUpProps> = ({ setLogin }) => {
               value={signUpForm.confirmPassword}
               handleChange={handleChange}
             />
-            <Button title="Sign in" type="solid" />
-          </div>
+            <Button buttonAction="submit" title="Sign up" type="solid" />
+          </form>
         </div>
         <p className="l1-r text-neutral-800 text-center">Or</p>
         <Button
@@ -176,9 +243,9 @@ const SignInModal: React.FC<SignInModalProps> = ({
           </div>
           <div className="pt-[10px] px-[106px] h-full">
             {login ? (
-              <Login setLogin={setLogin} />
+              <Login setOpenModal={setOpenModal} setLogin={setLogin} />
             ) : (
-              <SignUp setLogin={setLogin} />
+              <SignUp setOpenModal={setOpenModal} setLogin={setLogin} />
             )}
           </div>
         </div>

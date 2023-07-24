@@ -9,6 +9,7 @@ type InputProps = {
   boxType?: "primary" | "secondary";
   handleChange: (id: string, value: any) => void;
   id: string;
+  error?: boolean;
 };
 
 const Input: React.FC<InputProps> = ({
@@ -19,6 +20,7 @@ const Input: React.FC<InputProps> = ({
   boxType = "primary",
   handleChange,
   id,
+  error,
 }) => {
   const [visibility, setVisibility] = useState<boolean>(false);
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -28,12 +30,20 @@ const Input: React.FC<InputProps> = ({
   return (
     <>
       {boxType === "primary" ? (
-        <fieldset className="border-[1px] border-black-700 px-[16px] pt-[8px] pb-[14px] rounded-lg w-full focus:border-primary-900">
-          <legend className="p3-sb text-neutral-700 ">{title}</legend>
+        <fieldset
+          className={`border-[1px] ${
+            error ? "border-red-700" : "border-black-700"
+          } px-[16px] pt-[8px] pb-[14px] rounded-lg w-full focus:border-primary-900`}
+        >
+          <legend
+            className={`p3-sb ${error ? "text-red-700" : "text-neutral-700"}  `}
+          >
+            {title}
+          </legend>
           <div className="flex gap-3">
             <input
               id={id}
-              className="bg-none border-none outline-none text-neutral-300 placeholder:text-neutral-900 w-full l1-r placeholder:l2-r "
+              className="bg-none border-none outline-none text-neutral-300 placeholder:text-neutral-900 w-full l1-r placeholder:l2-r   "
               type={
                 type === "password" ? (visibility ? "text" : "password") : type
               }

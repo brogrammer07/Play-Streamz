@@ -7,9 +7,11 @@ import ChipInput from "../../components/input/ChipInput";
 import InputFile from "../../components/input/InputFile";
 import Button from "../../components/button";
 import StreamPreview from "./StreamPreview";
+import { useNavigate } from "react-router-dom";
 interface LiveProps {}
 
 const Live: FC<LiveProps> = ({}) => {
+  const navigate = useNavigate();
   const [videoForm, setVideoForm] = useState<{
     title: string;
     description: string;
@@ -114,7 +116,11 @@ const Live: FC<LiveProps> = ({}) => {
           </div>
         </div>
 
-        <Button title="Go Live" type="solid" />
+        <Button
+          onClick={() => navigate("/live-video")}
+          title="Go Live"
+          type="solid"
+        />
       </div>
     </LayoutPrimary>
   );

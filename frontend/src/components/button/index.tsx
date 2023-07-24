@@ -1,9 +1,12 @@
+import CircularProgress from "@mui/material/CircularProgress";
 type ButtonProps = {
   icon?: React.ReactNode;
   type: "outlined" | "solid" | "normal" | "rounded" | "follow";
   title: string | number;
   accent?: "primary" | "white" | "red";
   onClick?: () => void;
+  buttonAction?: "button" | "submit" | "reset" | undefined;
+  loading?: boolean;
 };
 
 const OutlinedButton: React.FC<ButtonProps> = ({
@@ -11,9 +14,12 @@ const OutlinedButton: React.FC<ButtonProps> = ({
   title,
   icon,
   onClick,
+  buttonAction,
+  loading,
 }) => {
   return (
-    <div
+    <button
+      type={buttonAction}
       onClick={onClick}
       className={`btn border-[1px] ${
         accent === "red"
@@ -23,7 +29,13 @@ const OutlinedButton: React.FC<ButtonProps> = ({
     >
       {icon}
       <p className="p1-sb ">{title}</p>
-    </div>
+      {loading && (
+        <CircularProgress
+          sx={{ color: accent === "red" ? "A01819" : "#D48F2F" }}
+          size={20}
+        />
+      )}
+    </button>
   );
 };
 const SolidButton: React.FC<ButtonProps> = ({
@@ -31,41 +43,62 @@ const SolidButton: React.FC<ButtonProps> = ({
   title,
   icon,
   onClick,
+  buttonAction,
+  loading,
 }) => {
   return (
-    <div
+    <button
+      type={buttonAction}
       onClick={onClick}
       className={`btn ${
         accent === "white"
           ? "bg-neutral-300 text-black-900 hover:bg-neutral-500 py-[13px]"
           : "bg-primary-900 text-neutral-300 hover:bg-primary-dark"
-      } rounded-md `}
+      } rounded-md transition-all duration-150 `}
     >
       {icon}
       <p className="p1-sb ">{title}</p>
-    </div>
+      {loading && (
+        <CircularProgress
+          sx={{ color: accent === "white" ? "#0F0F0D" : "#ffffff" }}
+          size={20}
+        />
+      )}
+    </button>
   );
 };
-const NormalButton: React.FC<ButtonProps> = ({ title, icon, onClick }) => {
+const NormalButton: React.FC<ButtonProps> = ({
+  title,
+  icon,
+  onClick,
+  buttonAction,
+}) => {
   return (
-    <div
+    <button
+      type={buttonAction}
       onClick={onClick}
       className={`btn text-primary-900 rounded-md hover:bg-primary-900 hover:text-neutral-300`}
     >
       {icon}
       <p className="p1-sb ">{title}</p>
-    </div>
+    </button>
   );
 };
-const RoundedButton: React.FC<ButtonProps> = ({ title, icon, onClick }) => {
+const RoundedButton: React.FC<ButtonProps> = ({
+  title,
+  icon,
+  onClick,
+  buttonAction,
+}) => {
   return (
-    <div
+    <button
+      type={buttonAction}
       onClick={onClick}
       className={`btn border-[1px] border-primary-900 text-primary-900 rounded-2xl hover:bg-primary-900 hover:text-neutral-300 `}
     >
       {icon}
       <p className="p1-sb ">{title}</p>
-    </div>
+    </button>
   );
 };
 
@@ -75,6 +108,8 @@ const Button: React.FC<ButtonProps> = ({
   title,
   accent,
   onClick,
+  buttonAction,
+  loading,
 }) => {
   return (
     <>
@@ -85,6 +120,8 @@ const Button: React.FC<ButtonProps> = ({
           type={type}
           accent={accent}
           onClick={onClick}
+          buttonAction={buttonAction}
+          loading={loading}
         />
       )}
       {type === "normal" && (
@@ -94,6 +131,7 @@ const Button: React.FC<ButtonProps> = ({
           type={type}
           accent={accent}
           onClick={onClick}
+          buttonAction={buttonAction}
         />
       )}
       {type === "outlined" && (
@@ -103,6 +141,8 @@ const Button: React.FC<ButtonProps> = ({
           type={type}
           accent={accent}
           onClick={onClick}
+          buttonAction={buttonAction}
+          loading={loading}
         />
       )}
       {type === "rounded" && (
@@ -112,6 +152,7 @@ const Button: React.FC<ButtonProps> = ({
           type={type}
           accent={accent}
           onClick={onClick}
+          buttonAction={buttonAction}
         />
       )}
     </>
