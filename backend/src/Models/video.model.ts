@@ -5,12 +5,12 @@ interface IVideo extends Document {
   link: string;
   title: string;
   description: string;
-  by: { type: mongoose.Types.ObjectId };
+  channelId: { type: mongoose.Types.ObjectId };
+  views: string;
   likes: string;
   dislikes: string;
   tags: string[];
   thumbnail: string;
-  duration: number;
   comment: { type: mongoose.Types.ObjectId }[];
   searchableParams: string;
 }
@@ -21,12 +21,16 @@ const videoSchema: Schema<IVideo> = new Schema(
     link: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    by: { type: mongoose.Types.ObjectId, required: true, ref: "Channel" },
-    likes: { type: String, default: "" },
-    dislikes: { type: String, default: "" },
+    channelId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: "Channel",
+    },
+    likes: { type: String, default: "0" },
+    views: { type: String, default: "0" },
+    dislikes: { type: String, default: "0" },
     tags: { type: [String], default: [] },
     thumbnail: { type: String, default: "", required: true },
-    duration: { type: Number, default: 0, required: true },
     comment: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
     searchableParams: { type: String, default: "" },
   },

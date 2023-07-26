@@ -4,5 +4,5 @@ export type User = {
   profileUrl?: string;
   isGoogle: boolean;
   _id: string;
-  userId: string;
+  channelId: string;
 };

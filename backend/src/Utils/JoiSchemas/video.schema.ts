@@ -1,7 +1,10 @@
 import Joi from "joi";
 const videoSchema = {
   getPresignedUrl: Joi.object().keys({
-    filename: Joi.string().required(),
+    videoFileName: Joi.string().required(),
+    videoFileType: Joi.string().required(),
+    imageFileName: Joi.string().required(),
+    imageFileType: Joi.string().required(),
   }),
   uploadVideo: Joi.object().keys({
     link: Joi.string().required(),
@@ -9,7 +12,9 @@ const videoSchema = {
     description: Joi.string().required(),
     tags: Joi.array().items(Joi.string()).required(),
     thumbnail: Joi.string().required(),
-    durations: Joi.number().required(),
+  }),
+  getVideosForUser: Joi.object().keys({
+    userId: Joi.string().required(),
   }),
 };
 export { videoSchema };

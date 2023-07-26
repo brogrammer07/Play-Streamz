@@ -1,26 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-type VideoPreviewProps = {
-  videoId: string;
-  channelId: string;
-  title: string;
-  thumbnail: string;
-  views: number;
-  postedAt: string;
-  channel: {
-    name: string;
-  };
+import { VideoResponse } from "../../typings";
+import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
+type VideoPreviewProps = VideoResponse & {
   page: "home" | "saved" | "liked" | "profile";
 };
-
 const VideoPreview: React.FC<VideoPreviewProps> = ({
   title,
   thumbnail,
   views,
-  postedAt,
-  channel,
-  videoId,
+  createdAt,
+  channelData,
+  _id,
   page,
 }) => {
   const navigate = useNavigate();
@@ -37,16 +29,19 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
         </div>
       )}
       <div
-        onClick={() => navigate(`/video?v=${videoId}`)}
+        onClick={() => navigate(`/video?v=${_id}`)}
         className="w-full h-full rounded-2xl relative cursor-pointer"
       >
         <div className="absolute w-full h-full top-0 overlayShadow hover:opacity-0 transition-opacity duration-500 flex flex-col justify-end pb-[26px] px-[34px]">
           <div className="flex flex-col text-neutral-400 space-y-[8px]">
             <h4>{title}</h4>
             <div className="flex items-center justify-between">
-              <p className="p3-sb">{channel.name}</p>
+              <p className="p3-sb">{channelData.channelName}</p>
               <p className="p3-r">
-                {views} Views | {postedAt}
+                {views} Views |{" "}
+                {formatDistanceToNowStrict(new Date(createdAt), {
+                  addSuffix: true,
+                })}
               </p>
             </div>
           </div>

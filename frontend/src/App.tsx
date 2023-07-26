@@ -10,6 +10,7 @@ import Live from "./pages/Live";
 import Test from "./utils/Test";
 import LiveVideo from "./pages/LiveVideo";
 import { useUserAuth } from "./context/userAuthContext";
+import PageNotFound from "./components/pageNotFound";
 
 function App() {
   const { currentUser, loading } = useUserAuth();
@@ -25,13 +26,18 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/video" element={<Video />} />
-          <Route path="/saved" element={<Saved />} />
-          <Route path="/liked" element={<Liked />} />
-          <Route path="/following" element={<Following />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/live" element={<Live />} />
+          {currentUser && (
+            <>
+              <Route path="/saved" element={<Saved />} />
+              <Route path="/liked" element={<Liked />} />
+              <Route path="/following" element={<Following />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/live" element={<Live />} />
+            </>
+          )}
           <Route path="/live-video" element={<LiveVideo />} />
           <Route path="/test" element={<Test />} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       )}
     </div>

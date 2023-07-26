@@ -6,14 +6,20 @@ import Button from "../../button";
 import Input from "../../input/Input";
 import InputFile from "../../input/InputFile";
 import DeleteIcon from "@mui/icons-material/Delete";
-import VideoPlayer from "../../videoPlayer";
 import ChipInput from "../../input/ChipInput";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { getPresignedUrl, uploadVideo, uploadVideoToS3 } from "../../../api";
+import { toast } from "react-toastify";
+
 interface UploadModalProps {
   openModal: boolean;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
 }
 
 const UploadModal: FC<UploadModalProps> = ({ openModal, setOpenModal }) => {
+  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState<boolean>(false);
   const [videoForm, setVideoForm] = useState<{
     title: string;
     description: string;
@@ -29,10 +35,10 @@ const UploadModal: FC<UploadModalProps> = ({ openModal, setOpenModal }) => {
   });
 
   const handleChange = (id: string, value: any) => {
-    setVideoForm({ ...videoForm, [id]: value });
+    setVideoForm((prevVideoForm) => ({ ...prevVideoForm, [id]: value }));
   };
   const handleFileChange = (id: string, value: any) => {
-    setVideoForm({ ...videoForm, [id]: value });
+    setVideoForm((prevVideoForm) => ({ ...prevVideoForm, [id]: value }));
   };
 
   const handleChipChange = (data: {
@@ -40,29 +46,104 @@ const UploadModal: FC<UploadModalProps> = ({ openModal, setOpenModal }) => {
     value?: string;
     idx?: number;
   }) => {
-    if (data.action === "add" && data.value?.trim()) {
-      setVideoForm({
-        ...videoForm,
-        tags: [...videoForm.tags, data.value.trim()],
-      });
+    if (data.action === "add" && data.value && data.value?.trim()) {
+      const prevTags = [...videoForm.tags];
+      prevTags.push(data.value.trim());
+      setVideoForm((prevVideoForm) => ({
+        ...prevVideoForm,
+        tags: prevTags,
+      }));
     }
     if (data.action === "remove") {
       const updatedChips: string[] = videoForm.tags.filter(
         (c, i) => i !== data.idx
       );
-      setVideoForm({ ...videoForm, tags: updatedChips });
+      setVideoForm((prevVideoForm) => ({
+        ...prevVideoForm,
+        tags: updatedChips,
+      }));
     }
   };
 
   const handleModalClose = () => {
-    setVideoForm({
-      video: null,
-      thumbnail: null,
-      title: "",
-      tags: [],
-      description: "",
-    });
-    setOpenModal(false);
+    if (!loading) {
+      setVideoForm({
+        video: null,
+        thumbnail: null,
+        title: "",
+        tags: [],
+        description: "",
+      });
+      setOpenModal(false);
+    }
+  };
+
+  const uploadVideoMutation = useMutation(uploadVideo, {
+    onSuccess: (response) => {
+      setLoading(false);
+      toast.success("Video Uploaded Successfully!");
+      setVideoForm({
+        video: null,
+        thumbnail: null,
+        title: "",
+        tags: [],
+        description: "",
+      });
+      setOpenModal(false);
+    },
+    onError: (err: AxiosError) => {
+      setLoading(false);
+      toast.error("An error occurred while uploading, please try again");
+      console.log("eee", err);
+    },
+  });
+
+  const handleUpload = async () => {
+    if (videoForm.video && videoForm.thumbnail) {
+      setLoading(true);
+      const videoFileName = videoForm.video.name.split(".")[0];
+      const videoFileType = videoForm.video.type;
+      const imageFileName = videoForm.thumbnail.name.split(".")[0];
+      const imageFileType = videoForm.thumbnail.type;
+      await getPresignedUrl({
+        videoFileName,
+        videoFileType,
+        imageFileType,
+        imageFileName,
+      }).then((res) => {
+        const videolink = res.data.videoUrl;
+        const imagelink = res.data.imageUrl;
+        var checkVideoUpload = true;
+        var checkImageUpload = true;
+        uploadVideoToS3(videolink, videoForm.video).then(() => {
+          checkVideoUpload = true;
+        });
+        uploadVideoToS3(imagelink, videoForm.thumbnail).then(() => {
+          checkImageUpload = true;
+        });
+        if (checkImageUpload && checkVideoUpload) {
+          uploadVideoMutation.mutate({
+            title: videoForm.title,
+            description: videoForm.description,
+            tags: videoForm.tags,
+            thumbnail: imagelink.split("?")[0],
+            link: videolink.split("?")[0],
+          });
+        }
+      });
+    }
+  };
+
+  const checkDisabled = () => {
+    if (
+      videoForm.description === "" ||
+      videoForm.title === "" ||
+      videoForm.tags.length === 0 ||
+      videoForm.thumbnail === null ||
+      videoForm.video === null
+    )
+      return true;
+    else return false;
   };
 
   return (
@@ -85,6 +166,7 @@ const UploadModal: FC<UploadModalProps> = ({ openModal, setOpenModal }) => {
           >
             <CloseOutlinedIcon />
           </div>
+
           <div className="pt-[10px] px-[22px] h-full  overflow-y-auto flex flex-col space-y-[23px]">
             {videoForm.video ? (
               <div className="relative">
@@ -170,7 +252,13 @@ const UploadModal: FC<UploadModalProps> = ({ openModal, setOpenModal }) => {
             </div>
           </div>
           <div className="sticky top-0 w-full py-[18px] px-[22px] flex items-center space-x-[12px] justify-end border-t-[1px] border-t-black-700">
-            <Button type="solid" title="Upload" />
+            <Button
+              disabled={checkDisabled()}
+              loading={loading}
+              onClick={handleUpload}
+              type="solid"
+              title={loading ? "Uploading" : "Upload"}
+            />
             <Button onClick={handleModalClose} type="outlined" title="Cancel" />
           </div>
         </div>

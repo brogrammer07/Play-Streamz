@@ -7,6 +7,7 @@ type ButtonProps = {
   onClick?: () => void;
   buttonAction?: "button" | "submit" | "reset" | undefined;
   loading?: boolean;
+  disabled?: boolean;
 };
 
 const OutlinedButton: React.FC<ButtonProps> = ({
@@ -45,15 +46,21 @@ const SolidButton: React.FC<ButtonProps> = ({
   onClick,
   buttonAction,
   loading,
+  disabled,
 }) => {
   return (
     <button
+      disabled={disabled}
       type={buttonAction}
       onClick={onClick}
       className={`btn ${
         accent === "white"
           ? "bg-neutral-300 text-black-900 hover:bg-neutral-500 py-[13px]"
-          : "bg-primary-900 text-neutral-300 hover:bg-primary-dark"
+          : `${
+              disabled
+                ? "bg-neutral-800 text-neutral-900 hover:cursor-not-allowed"
+                : "bg-primary-900 text-neutral-300 hover:bg-primary-dark"
+            }`
       } rounded-md transition-all duration-150 `}
     >
       {icon}
@@ -110,6 +117,7 @@ const Button: React.FC<ButtonProps> = ({
   onClick,
   buttonAction,
   loading,
+  disabled,
 }) => {
   return (
     <>
@@ -122,6 +130,7 @@ const Button: React.FC<ButtonProps> = ({
           onClick={onClick}
           buttonAction={buttonAction}
           loading={loading}
+          disabled={disabled}
         />
       )}
       {type === "normal" && (

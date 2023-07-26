@@ -10,6 +10,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 import Drawer from "@mui/material/Drawer";
 import { Avatar } from "@mui/material";
+import { useUserAuth } from "../../context/userAuthContext";
 type OptionsProps = {
   title: string;
   link: string;
@@ -44,6 +45,7 @@ const SidebarContent = ({
   type?: "primary" | "secondary";
   setOpenSidebar: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { currentUser } = useUserAuth();
   return (
     <div
       className={
@@ -74,11 +76,15 @@ const SidebarContent = ({
             link="/"
             icon={<HomeOutlinedIcon sx={{ height: "24px", width: "24px" }} />}
           />
-          <Options
-            title="Profile"
-            link="/profile"
-            icon={<PersonOutlinedIcon sx={{ height: "24px", width: "24px" }} />}
-          />
+          {currentUser && (
+            <Options
+              title="Profile"
+              link="/profile"
+              icon={
+                <PersonOutlinedIcon sx={{ height: "24px", width: "24px" }} />
+              }
+            />
+          )}
           <Options
             title="Live"
             link="/live"

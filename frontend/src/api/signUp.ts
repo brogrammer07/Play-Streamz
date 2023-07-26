@@ -23,7 +23,7 @@ interface signUpProps {
   token: string;
 }
 
-export const signUp = (props: signUpProps) => {
+export const signUp = async (props: signUpProps) => {
   return sendRequest<UserResult>("post", `/sign-up`, {
     ...props,
   }).then((res) => res.data);

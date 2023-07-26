@@ -1,13 +1,12 @@
-import { Request, Response } from "express-serve-static-core";
-import channelModel from "../../Models/channel.model";
+import { Response } from "express-serve-static-core";
 import catchAsync from "../../Utils/catch.async";
-import { AppError } from "../../Utils/app.error.handle";
-import firebaseAuth from "../../Config/firebase.auth.config";
+
 import { AuthRequest } from "../../Types";
+import userModel from "../../Models/user.model";
 
 const loginUserController = catchAsync(
   async (req: AuthRequest, res: Response) => {
-    const user = await channelModel.findOne({ userId: req.userId });
+    const user = await userModel.findById(req.userId);
     return res.status(201).json({
       status: "success",
       message: "User data",

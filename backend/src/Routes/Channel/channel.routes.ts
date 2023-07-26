@@ -4,7 +4,6 @@ import { videoSchema } from "../../Utils/JoiSchemas/video.schema";
 import { isAuthenticated } from "../../Utils/Auth/is.auth.helper";
 import { getPresignedUrlController } from "../../Controllers/Video/get.presigned.url.controller";
 import { uploadVideoController } from "../../Controllers/Video/upload.video.controller";
-import { getVideosNotFollowing } from "../../Controllers/Video/get.videos.not.following.controller";
 const router = express.Router();
 router
   .route("/get-presigned-url")
@@ -21,7 +20,5 @@ router
     uploadVideoController
   );
 
-router
-  .route("/get-videos-not-following")
-  .get(isAuthenticated, getVideosNotFollowing);
+// router.route("/get-videos");
 export default router;

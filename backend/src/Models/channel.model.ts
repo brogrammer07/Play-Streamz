@@ -6,12 +6,8 @@ import globals from "../Config/globals.config";
 
 // Define the Channel interface
 interface IChannel extends Document {
-  name: string;
-  email: string;
-  password: string;
-  profileUrl: string;
-  isGoogle: boolean;
   userId: string;
+  channelName: string;
   follower: {
     type: mongoose.Types.ObjectId;
   }[];
@@ -31,18 +27,12 @@ interface IChannel extends Document {
   likes: string;
   searchableParams: string;
 }
-interface IChannelDocument extends IChannel, Document {
-  comparePassword: (password: string) => Promise<boolean>;
-}
+
 // Define the ChannelSchema
-const channelSchema: Schema<IChannelDocument> = new Schema(
+const channelSchema: Schema<IChannel> = new Schema(
   {
-    name: { type: String, required: true },
-    userId: { type: String, required: true, unique: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String },
-    profileUrl: { type: String, required: false },
-    isGoogle: { type: Boolean, required: true, default: false },
+    userId: { type: String, ref: "User", required: true, unique: true },
+    channelName: { type: String, required: true },
     follower: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -80,33 +70,8 @@ const channelSchema: Schema<IChannelDocument> = new Schema(
   { timestamps: true }
 );
 
-// Pre-save hook to hash the Channel's password before saving
-channelSchema.pre<IChannel>("save", async function (next) {
-  console.log("name", this.name);
-  if (this.isGoogle) return next();
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(this.password, salt);
-    this.password = hashedPassword;
-    next();
-  } catch (error) {
-    return next(new AppError(error.message, 500, "ERR_UKN"));
-  }
-});
-
-// Method to compare the Channel's password with the provided password
-channelSchema.methods.comparePassword = async function (
-  password: string
-): Promise<boolean> {
-  try {
-    return await bcrypt.compare(password, this.password);
-  } catch (error) {
-    throw new AppError(error.message, 500, "ERR_UKN");
-  }
-};
-
 // Create and export the ChannelModel
-const channelModel: Model<IChannelDocument> = mongoose.model<IChannelDocument>(
+const channelModel: Model<IChannel> = mongoose.model<IChannel>(
   "Channel",
   channelSchema
 );
