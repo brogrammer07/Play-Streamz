@@ -1,0 +1,8 @@
+1. Fix video description truncate on search page
+2. Fix multiple call at time of user signup
+3. Implement Pagination
+4. Sign up and in with google
+5. Handling loading of sign up
+6. Error handling in sign up
+7. No result found for search
+8. Fix Search for videos followed by the channel and for unathenticated users

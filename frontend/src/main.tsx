@@ -9,14 +9,12 @@ import { UserAuthProvider } from "./context/userAuthContext.tsx";
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <BrowserRouter>
-        <UserAuthProvider>
-          <App />
-        </UserAuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </React.StrictMode>
+  <QueryClientProvider client={queryClient}>
+    <ReactQueryDevtools initialIsOpen={false} />
+    <BrowserRouter>
+      <UserAuthProvider>
+        <App />
+      </UserAuthProvider>
+    </BrowserRouter>
+  </QueryClientProvider>
 );

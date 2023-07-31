@@ -8,6 +8,7 @@ import globals from "../Config/globals.config";
 interface IChannel extends Document {
   userId: string;
   channelName: string;
+  channelProfile: string;
   follower: {
     type: mongoose.Types.ObjectId;
   }[];
@@ -33,6 +34,7 @@ const channelSchema: Schema<IChannel> = new Schema(
   {
     userId: { type: String, ref: "User", required: true, unique: true },
     channelName: { type: String, required: true },
+    channelProfile: { type: String, default: null },
     follower: [
       {
         type: mongoose.Schema.Types.ObjectId,

@@ -17,7 +17,7 @@ export const sendRequest: Client = async (
   options?: any
 ) => {
   let token = null;
-  token = await auth.currentUser!.getIdToken();
+  token = await auth.currentUser?.getIdToken();
 
   return axios({
     method,

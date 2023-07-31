@@ -1,24 +1,14 @@
 import { sendRequest } from "./helper";
 
-import { Channel } from "../typings";
+import { Channel, User } from "../typings";
 
-type UserResult = {
-  status: string;
-  message: string;
-  data: {
-    email: string;
-    name: string;
-    profileUrl?: string;
-    userId: string;
-    isGoogle: boolean;
-  };
-};
+type UserResult = { status: string; message: string; data: User };
 
 interface signUpProps {
   name: string;
   email: string;
   profileUrl?: string;
-  password: string;
+  password?: string;
   isGoogle: boolean;
   token: string;
 }

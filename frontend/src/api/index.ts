@@ -4,4 +4,7 @@ export * from "./getUser";
 export * from "./signIn";
 export * from "./uploadVideo";
 export * from "./uploadVideoToS3";
-export * from "./getVideosNotFollowing";
+export * from "./getVideos";
+export * from "./getSearchVideo";
+export * from "./followChannel";
+export * from "./getChannelVideos";

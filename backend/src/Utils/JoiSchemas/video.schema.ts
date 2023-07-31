@@ -16,5 +16,11 @@ const videoSchema = {
   getVideosForUser: Joi.object().keys({
     userId: Joi.string().required(),
   }),
+  getSearchVideo: Joi.object().keys({
+    searchQuery: Joi.string().required(),
+  }),
+  getVideos: Joi.object().keys({
+    page: Joi.string(),
+  }),
 };
 export { videoSchema };

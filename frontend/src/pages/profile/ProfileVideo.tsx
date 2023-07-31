@@ -4,10 +4,14 @@ import VideoPreview from "../../components/videoPreview";
 import Button from "../../components/button";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import UploadModal from "../../components/modals/UploadModal";
+import { useQuery } from "@tanstack/react-query";
+import { getChannelVideos } from "../../api";
 interface Props {}
 
 const ProfileVideo: FC<Props> = ({}) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [getChannelVideosKey, getChannelVideosFn] = getChannelVideos();
+  const { data: videos } = useQuery(getChannelVideosKey, getChannelVideosFn);
 
   return (
     <>
@@ -21,7 +25,7 @@ const ProfileVideo: FC<Props> = ({}) => {
             icon={<CloudUploadOutlinedIcon />}
           />
         </div>
-        {videos.map((video, idx) => (
+        {videos?.data?.map((video, idx) => (
           <VideoPreview page="profile" key={idx} {...video} />
         ))}
       </div>

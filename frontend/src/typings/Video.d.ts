@@ -1,5 +1,5 @@
 import { Comment } from "./Comment";
-
+import { Channel } from "./Channel";
 export type Video = {
   _id: string;
   link: string;
@@ -17,3 +17,7 @@ export type Video = {
 };
 
 export type VideoResponse = Video & { channelData: Channel };
+
+export type VideoSearchResponse = Video & {
+  channelData: Channel & { isFollowing: boolean; followersCount: number };
+};

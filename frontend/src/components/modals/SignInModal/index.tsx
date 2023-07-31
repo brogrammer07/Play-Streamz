@@ -23,7 +23,7 @@ type SignUpProps = {
 };
 
 const Login: React.FC<LoginProps> = ({ setLogin, setOpenModal }) => {
-  const { loginUser } = useUserAuth();
+  const { loginUser, googleSignIn } = useUserAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const [formError, setFormError] = useState<{
     email: boolean;
@@ -66,7 +66,11 @@ const Login: React.FC<LoginProps> = ({ setLogin, setOpenModal }) => {
         setLoading(false);
       });
   };
-  console.log(formError);
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then(() => setOpenModal(false))
+      .catch((err) => console.log("ERROR", err));
+  };
 
   return (
     <div className="flex flex-col justify-between items-center h-full">
@@ -109,6 +113,7 @@ const Login: React.FC<LoginProps> = ({ setLogin, setOpenModal }) => {
         </div>
         <p className="l1-r text-neutral-800 text-center">Or</p>
         <Button
+          onClick={handleGoogleSignIn}
           title="Continue with Google"
           type="solid"
           accent="white"
@@ -130,7 +135,8 @@ const Login: React.FC<LoginProps> = ({ setLogin, setOpenModal }) => {
 };
 
 const SignUp: React.FC<SignUpProps> = ({ setLogin, setOpenModal }) => {
-  const { signUpUser, currentUser } = useUserAuth();
+  const { signUpUser, googleSignUp } = useUserAuth();
+  const [loading, setLoading] = useState<boolean>(false);
   const [signUpForm, setSignUpForm] = useState<{
     name: string;
     email: string;
@@ -144,10 +150,15 @@ const SignUp: React.FC<SignUpProps> = ({ setLogin, setOpenModal }) => {
   const handleSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (signUpForm.password === signUpForm.confirmPassword) {
-      signUpUser(signUpForm.email, signUpForm.password, signUpForm.name).then(
-        () => setOpenModal(false)
-      );
+      setLoading(true);
+      signUpUser(signUpForm.email, signUpForm.password, signUpForm.name)
+        .then(() => setOpenModal(false))
+        .finally(() => setLoading(false));
     }
+  };
+
+  const handleGoogleSignUp = () => {
+    googleSignUp().then(() => setOpenModal(false));
   };
 
   return (
@@ -191,11 +202,17 @@ const SignUp: React.FC<SignUpProps> = ({ setLogin, setOpenModal }) => {
               value={signUpForm.confirmPassword}
               handleChange={handleChange}
             />
-            <Button buttonAction="submit" title="Sign up" type="solid" />
+            <Button
+              loading={loading}
+              buttonAction="submit"
+              title="Sign up"
+              type="solid"
+            />
           </form>
         </div>
         <p className="l1-r text-neutral-800 text-center">Or</p>
         <Button
+          onClick={handleGoogleSignUp}
           title="Continue with Google"
           type="solid"
           accent="white"

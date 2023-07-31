@@ -6,7 +6,9 @@ import userModel from "../../Models/user.model";
 
 const loginUserController = catchAsync(
   async (req: AuthRequest, res: Response) => {
-    const user = await userModel.findById(req.userId);
+    const user = await userModel
+      .findById(req.userId)
+      .select("_id name profileUrl email channelId isGoogle ");
     return res.status(201).json({
       status: "success",
       message: "User data",

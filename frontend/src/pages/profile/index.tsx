@@ -14,6 +14,8 @@ import ProfileVideo from "./ProfileVideo";
 import ProfileFollowing from "./ProfileFollowing";
 import ProfileFollower from "./ProfileFollower";
 import ProfileAbout from "./ProfileAbout";
+import { getChannelInfo } from "../../api/getChannelInfo";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {}
 
@@ -48,6 +50,8 @@ const Option: FC<OptionProps> = ({ title, active, idx, setActive }) => {
 };
 
 const Profile: FC<Props> = ({}) => {
+  const [getChannelInfoKey, getChannelInfoFn] = getChannelInfo();
+  const { data: channelInfo } = useQuery(getChannelInfoKey, getChannelInfoFn);
   const [active, setActive] = useState<1 | 2 | 3 | 4>(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const headerOptionsRef = useRef<HTMLDivElement>(null);
@@ -81,7 +85,7 @@ const Profile: FC<Props> = ({}) => {
         ref={containerRef}
         className="flex flex-col space-y-[50px] overflow-y-auto pr-3 relative"
       >
-        <ProfileEdit channel={channel} />
+        <ProfileEdit channel={channelInfo?.data} />
         <div className="flex flex-col space-y-[37px]  relative">
           <div
             ref={headerOptionsRef}

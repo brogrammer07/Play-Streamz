@@ -17,8 +17,10 @@ function Header({ searchVal, type = "primary" }: HeaderProps) {
   const [searchValue, setSearchValue] = useState<string>("");
   const navigate = useNavigate();
   const searchResult = () => {
-    var searchQuery: string = searchValue.replace(/\s/g, "+");
-    navigate(`/search?search_query=${searchQuery}`);
+    if (searchValue !== "") {
+      var searchQuery: string = searchValue.replace(/\s/g, "+");
+      navigate(`/search?search_query=${searchQuery}`);
+    }
   };
 
   useEffect(() => {
@@ -60,7 +62,7 @@ function Header({ searchVal, type = "primary" }: HeaderProps) {
         {currentUser ? (
           <div onClick={() => logout()}>
             <Avatar
-              src={currentUser.photoURL || ""}
+              src={currentUser.profileUrl || ""}
               sx={{ width: "54px", height: "54px" }}
             />
           </div>
