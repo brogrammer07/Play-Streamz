@@ -9,13 +9,18 @@ interface getSearchVideoResponse {
 }
 
 export const getSearchVideo = (searchQuery: string | null) => {
-  const queryKey = ["videos", searchQuery];
+  const { currentUser } = useUserAuth();
+  const queryKey: (string | undefined)[] = [];
+  if (currentUser)
+    queryKey.push("videos", currentUser?._id, searchQuery as string);
+  else queryKey.push("videos", searchQuery as string);
 
   const queryFunction = () =>
     sendRequest<getSearchVideoResponse>(
       "get",
-      `/video/get-search-video?searchQuery=${searchQuery}`,
-      false
+      currentUser
+        ? `/video/get-search-video?searchQuery=${searchQuery}`
+        : `/video/get-all-search-video?searchQuery=${searchQuery}`
     ).then((res) => res.data);
 
   return [queryKey, queryFunction] as const;

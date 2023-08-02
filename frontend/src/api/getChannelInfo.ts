@@ -1,3 +1,4 @@
+import { useUserAuth } from "../context/userAuthContext";
 import { Channel } from "../typings";
 import { sendRequest } from "./helper";
 
@@ -7,15 +8,16 @@ interface getChannelInfoResponse {
   data: Channel;
 }
 
-export const getChannelInfo = (channelId?: string) => {
-  const queryKey = ["channel", "info", channelId ? channelId : "me"];
+export const getChannelInfo = (channelId: string) => {
+  const { currentUser } = useUserAuth();
+  const queryKey = ["profile", "info", channelId];
 
   const queryFunction = () =>
     sendRequest<getChannelInfoResponse>(
       "get",
-      channelId
-        ? `/channel/get-info?channelId${channelId}`
-        : `/channel/get-info`
+      currentUser?.channelId === channelId
+        ? `/channel/get-profile-info`
+        : `/channel/get-channel-info?channelId=${channelId}`
     ).then((res) => res.data);
 
   return [queryKey, queryFunction] as const;

@@ -22,5 +22,8 @@ const videoSchema = {
   getVideos: Joi.object().keys({
     page: Joi.string(),
   }),
+  deleteProfileVideo: Joi.object().keys({
+    videoId: Joi.string().required(),
+  }),
 };
 export { videoSchema };

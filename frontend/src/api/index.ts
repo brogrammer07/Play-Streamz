@@ -8,3 +8,7 @@ export * from "./getVideos";
 export * from "./getSearchVideo";
 export * from "./followChannel";
 export * from "./getChannelVideos";
+export * from "./deleteProfileVideo";
+export * from "./getChannelFollowing";
+export * from "./getChannelFollower";
+export * from "./getChannelAbout";

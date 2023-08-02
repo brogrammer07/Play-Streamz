@@ -14,4 +14,7 @@ export type Channel = {
   followerCount: number;
   followingCount: number;
   videoCount: number;
+  likes: string;
+  views: string;
+  createdAt: string;
 };

@@ -13,6 +13,8 @@ interface IVideo extends Document {
   thumbnail: string;
   comment: { type: mongoose.Types.ObjectId }[];
   searchableParams: string;
+  likedBy: { type: mongoose.Types.ObjectId };
+  savedBy: { type: mongoose.Types.ObjectId };
 }
 
 // Define the VideoSchema
@@ -32,6 +34,8 @@ const videoSchema: Schema<IVideo> = new Schema(
     tags: { type: [String], default: [] },
     thumbnail: { type: String, default: "", required: true },
     comment: [{ type: mongoose.Types.ObjectId, ref: "Comment" }],
+    likedBy: [{ type: mongoose.Types.ObjectId, ref: "Channel" }],
+    savedBy: [{ type: mongoose.Types.ObjectId, ref: "Channel" }],
     searchableParams: { type: String, default: "" },
   },
   { timestamps: true }

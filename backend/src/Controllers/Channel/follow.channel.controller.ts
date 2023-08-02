@@ -45,7 +45,6 @@ const followChannelController = catchAsync(
           { _id: currentUserchannelId },
           { $pull: { following: channelId } }
         );
-        console.log("Unfollowed the channel.");
         return res.status(200).json({
           status: "success",
           message: "Channel unfollowed successfully",
@@ -62,7 +61,6 @@ const followChannelController = catchAsync(
           { _id: currentUserchannelId },
           { $addToSet: { following: channelId } }
         );
-        console.log("Followed the channel.");
         return res.status(200).json({
           status: "success",
           message: "Channel followed successfully",

@@ -15,9 +15,14 @@ import { toast } from "react-toastify";
 interface UploadModalProps {
   openModal: boolean;
   setOpenModal: Dispatch<SetStateAction<boolean>>;
+  getChannelVideosKey: string[];
 }
 
-const UploadModal: FC<UploadModalProps> = ({ openModal, setOpenModal }) => {
+const UploadModal: FC<UploadModalProps> = ({
+  openModal,
+  setOpenModal,
+  getChannelVideosKey,
+}) => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
   const [videoForm, setVideoForm] = useState<{
@@ -89,6 +94,7 @@ const UploadModal: FC<UploadModalProps> = ({ openModal, setOpenModal }) => {
         tags: [],
         description: "",
       });
+      queryClient.invalidateQueries(getChannelVideosKey);
       setOpenModal(false);
     },
     onError: (err: AxiosError) => {

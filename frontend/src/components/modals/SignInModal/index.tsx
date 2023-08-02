@@ -237,7 +237,7 @@ const SignInModal: React.FC<SignInModalProps> = ({
   openModal,
   setOpenModal,
 }) => {
-  const [login, setLogin] = useState(false);
+  const [login, setLogin] = useState(true);
   return (
     <Modal
       closeAfterTransition

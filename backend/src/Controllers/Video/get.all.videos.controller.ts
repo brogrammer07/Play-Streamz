@@ -7,7 +7,7 @@ import videoModel from "../../Models/video.model";
 import channelModel from "../../Models/channel.model";
 import userModel from "../../Models/user.model";
 const videosPerPage = 3;
-const getAllVideos = catchAsync(async (req: AuthRequest, res: Response) => {
+const getAllVideosController = catchAsync(async (req: AuthRequest, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
   try {
     const videos = await videoModel.aggregate([
@@ -66,4 +66,4 @@ const getAllVideos = catchAsync(async (req: AuthRequest, res: Response) => {
   }
 });
 
-export { getAllVideos };
+export { getAllVideosController };

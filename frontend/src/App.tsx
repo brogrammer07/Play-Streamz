@@ -26,12 +26,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/video" element={<Video />} />
+          <Route path="/profile" element={<Profile />} />
           {currentUser && (
             <>
               <Route path="/saved" element={<Saved />} />
               <Route path="/liked" element={<Liked />} />
               <Route path="/following" element={<Following />} />
-              <Route path="/profile" element={<Profile />} />
               <Route path="/live" element={<Live />} />
             </>
           )}

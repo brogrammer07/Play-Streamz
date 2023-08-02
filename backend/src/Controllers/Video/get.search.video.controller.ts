@@ -6,9 +6,8 @@ import channelModel from "../../Models/channel.model";
 import userModel from "../../Models/user.model";
 import { AuthRequest } from "../../Types";
 
-const getSearchVideo = catchAsync(async (req: AuthRequest, res: Response) => {
+const getSearchVideoController = catchAsync(async (req: AuthRequest, res: Response) => {
   const { searchQuery } = req.query;
-  console.log(searchQuery);
   const userId = req.userId;
   const { channelId } = await userModel.findById(userId, { channelId: 1 });
   if (!channelId) {
@@ -57,14 +56,6 @@ const getSearchVideo = catchAsync(async (req: AuthRequest, res: Response) => {
           },
         },
       },
-      // Skip videos for previous pages
-      //   {
-      //     $skip: (page - 1) * videosPerPage,
-      //   },
-      //   // Limit the result to the current page
-      //   {
-      //     $limit: videosPerPage,
-      //   },
     ])
     .then((result) => {
       return res.status(200).json({
@@ -78,4 +69,4 @@ const getSearchVideo = catchAsync(async (req: AuthRequest, res: Response) => {
     });
 });
 
-export { getSearchVideo };
+export { getSearchVideoController };

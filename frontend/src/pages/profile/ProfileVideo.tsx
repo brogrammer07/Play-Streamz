@@ -1,17 +1,46 @@
-import { FC, useState } from "react";
-import { videos } from "../../utils/data";
+import { FC, useState, useEffect, Fragment } from "react";
 import VideoPreview from "../../components/videoPreview";
 import Button from "../../components/button";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import UploadModal from "../../components/modals/UploadModal";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getChannelVideos } from "../../api";
-interface Props {}
+import { useUserAuth } from "../../context/userAuthContext";
+import { CircularProgress, Skeleton } from "@mui/material";
+interface ProfileVideoProps {
+  scrolledToBottom: boolean;
+}
 
-const ProfileVideo: FC<Props> = ({}) => {
+const ProfileVideo: FC<ProfileVideoProps> = ({ scrolledToBottom }) => {
+  const { currentUser } = useUserAuth();
+
+  const [channelId, setChannelId] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [getChannelVideosKey, getChannelVideosFn] = getChannelVideos();
-  const { data: videos } = useQuery(getChannelVideosKey, getChannelVideosFn);
+
+  const [getChannelVideosKey, getChannelVideosFn] = getChannelVideos(
+    channelId as string
+  );
+  const {
+    data: videosData,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(getChannelVideosKey, getChannelVideosFn, {
+    enabled: channelId !== null,
+    getNextPageParam: (lastPage) => {
+      return lastPage.data.page !== -1 ? lastPage.data.page + 1 : undefined;
+    },
+  });
+  useEffect(() => {
+    if (currentUser) {
+      setChannelId(currentUser.channelId);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (scrolledToBottom && hasNextPage) fetchNextPage();
+  }, [scrolledToBottom]);
 
   return (
     <>
@@ -25,11 +54,57 @@ const ProfileVideo: FC<Props> = ({}) => {
             icon={<CloudUploadOutlinedIcon />}
           />
         </div>
-        {videos?.data?.map((video, idx) => (
-          <VideoPreview page="profile" key={idx} {...video} />
-        ))}
+        {isLoading ? (
+          <>
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              sx={{ bgcolor: "#252522", borderRadius: "30px" }}
+              height={"267px"}
+              width={"100%"}
+            />
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              sx={{ bgcolor: "#252522", borderRadius: "30px" }}
+              height={"267px"}
+              width={"100%"}
+            />
+            <Skeleton
+              variant="rectangular"
+              animation="wave"
+              sx={{ bgcolor: "#252522", borderRadius: "30px" }}
+              height={"267px"}
+              width={"100%"}
+            />
+          </>
+        ) : (
+          <>
+            {videosData?.pages.map((page) => (
+              <Fragment key={page.data.page}>
+                {page.data.videos.map((video) => (
+                  <VideoPreview
+                    page="profile"
+                    key={video._id}
+                    {...video}
+                    getChannelVideosKey={getChannelVideosKey}
+                  />
+                ))}
+              </Fragment>
+            ))}
+          </>
+        )}
       </div>
-      <UploadModal openModal={openModal} setOpenModal={setOpenModal} />
+      {isFetchingNextPage && (
+        <div className="flex items-center justify-center">
+          <CircularProgress />
+        </div>
+      )}
+      <UploadModal
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        getChannelVideosKey={getChannelVideosKey}
+      />
     </>
   );
 };

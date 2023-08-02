@@ -1,7 +1,6 @@
 import { Request, Response } from "express-serve-static-core";
 import catchAsync from "../../Utils/catch.async";
 import { AppError } from "../../Utils/app.error.handle";
-import firebaseAuth from "../../Config/firebase.auth.config";
 import { AuthRequest } from "../../Types";
 import videoModel from "../../Models/video.model";
 import channelModel from "../../Models/channel.model";
@@ -10,7 +9,10 @@ const uploadVideoController = catchAsync(
   async (req: AuthRequest, res: Response) => {
     const { link, thumbnail, title, description, tags } = req.body;
     const userId = req.userId;
-    const channel = await channelModel.findOne({ userId });
+    const channel = await channelModel.findOne(
+      { userId },
+      { _id: 1, searchableParams: 1, video: 1 }
+    );
     if (!channel) {
       throw new AppError("Channel not found", 404, "ERR_CHANNEL_NOT_FOUND");
     }

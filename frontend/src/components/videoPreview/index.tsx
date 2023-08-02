@@ -3,8 +3,13 @@ import { useNavigate } from "react-router-dom";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { VideoResponse } from "../../typings";
 import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { deleteProfileVideo } from "../../api";
 type VideoPreviewProps = VideoResponse & {
   page: "home" | "saved" | "liked" | "profile";
+  getChannelVideosKey?: string[];
 };
 const VideoPreview: React.FC<VideoPreviewProps> = ({
   title,
@@ -14,9 +19,21 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
   channelData,
   _id,
   page,
+  getChannelVideosKey,
 }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [showDeleteIcon, setShowDeleteIcon] = useState<boolean>(false);
+  const deleteProfileVideoMutation = useMutation(deleteProfileVideo, {
+    onSuccess: (response) => {
+      toast.success("Video Deleted Successfully!");
+      queryClient.invalidateQueries(getChannelVideosKey);
+    },
+    onError: (err: AxiosError) => {
+      toast.error("An error occurred while uploading, please try again");
+      console.log("eee", err);
+    },
+  });
   return (
     <div
       onMouseEnter={() => setShowDeleteIcon(true)}
@@ -24,7 +41,13 @@ const VideoPreview: React.FC<VideoPreviewProps> = ({
       className="w-full h-[267px] relative"
     >
       {page !== "home" && showDeleteIcon && (
-        <div className="text-neutral-300 z-10 absolute top-4 flex justify-end right-4 cursor-pointer rounded-2xl">
+        <div
+          onClick={() => {
+            if (page === "profile")
+              deleteProfileVideoMutation.mutate({ videoId: _id });
+          }}
+          className="text-neutral-300 z-10 absolute top-4 flex justify-end right-4 cursor-pointer rounded-2xl hover:scale-105 transition-transform hover:border-[1px] hover:border-neutral-300"
+        >
           <CloseOutlinedIcon />
         </div>
       )}

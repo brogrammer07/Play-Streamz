@@ -4,9 +4,11 @@ import { videoSchema } from "../../Utils/JoiSchemas/video.schema";
 import { isAuthenticated } from "../../Utils/Auth/is.auth.helper";
 import { getPresignedUrlController } from "../../Controllers/Video/get.presigned.url.controller";
 import { uploadVideoController } from "../../Controllers/Video/upload.video.controller";
-import { getVideos } from "../../Controllers/Video/get.videos.controller";
-import { getSearchVideo } from "../../Controllers/Video/get.search.video.controller";
-import { getAllVideos } from "../../Controllers/Video/get.all.videos.controller";
+import { deleteProfileVideoController } from "../../Controllers/Video/delete.profile.video.controller";
+import { getVideosController } from "../../Controllers/Video/get.videos.controller";
+import { getAllVideosController } from "../../Controllers/Video/get.all.videos.controller";
+import { getSearchVideoController } from "../../Controllers/Video/get.search.video.controller";
+import { getAllSearchVideoController } from "../../Controllers/Video/get.all.search.video.controller";
 const router = express.Router();
 router
   .route("/get-presigned-url")
@@ -28,24 +30,31 @@ router
   .get(
     isAuthenticated,
     joiValidator(videoSchema.getVideos, "query"),
-    getVideos
+    getVideosController
   );
 
 router
   .route("/get-all-videos")
-  .get(joiValidator(videoSchema.getVideos, "query"), getAllVideos);
+  .get(joiValidator(videoSchema.getVideos, "query"), getAllVideosController);
 router
   .route("/get-search-video")
   .get(
     isAuthenticated,
     joiValidator(videoSchema.getSearchVideo, "query"),
-    getSearchVideo
+    getSearchVideoController
   );
 router
-  .route("/video/get-channel-video")
+  .route("/get-all-search-video")
   .get(
-    isAuthenticated,
     joiValidator(videoSchema.getSearchVideo, "query"),
-    getSearchVideo
+    getAllSearchVideoController
+  );
+
+router
+  .route("/delete-profile-video")
+  .post(
+    isAuthenticated,
+    joiValidator(videoSchema.deleteProfileVideo, "query"),
+    deleteProfileVideoController
   );
 export default router;
